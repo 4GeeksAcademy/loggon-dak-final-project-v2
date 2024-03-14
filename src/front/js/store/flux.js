@@ -4,7 +4,7 @@ const getState = ({ getStore, getActions, setStore }) => {
       token: null,
       loggedIn: false,
       user: {
-        id: 1,
+        /*id: 1,
         email: "pereayats@email.com",
         password: "1234",
         image_url:
@@ -130,7 +130,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             game_tags: ["multiplayer", "action", "adventure", "open-world"],
           },
         ],
-        newsletter: false,
+        newsletter: false,*/
       },
       deals: [
         {
@@ -323,7 +323,8 @@ const getState = ({ getStore, getActions, setStore }) => {
     actions: {
       //--------------------------LOGIN/LOGOUT/SIGNUP ACTIONS----------------------//
       signup: (email, password, username) => {
-        fetch(process.env.BACKEND_URL + "api/login", {
+        console.log("from signupq", email, password, username)
+        fetch(process.env.BACKEND_URL + "/api/signup", {
           method: "POST",
           body: JSON.stringify({ email, password, username }),
           headers: {
@@ -338,9 +339,9 @@ const getState = ({ getStore, getActions, setStore }) => {
           })
           .then((data) => {
             console.log(data);
+            console.log("User registered successfully!");
           })
           .catch((error) => console.error("Error:", error));
-        console.log("User registered successfully!");
       },
 
       login: (email, password) => {
@@ -351,10 +352,16 @@ const getState = ({ getStore, getActions, setStore }) => {
             "Content-Type": "application/json",
           },
         })
-          .then((response) => response.json())
+        .then((response) => {
+          if (!response.ok) {
+            throw Error(`Status: ${response.status}`);
+          }
+          return response.json();
+        })
           .then((data) => {
             if (data.error) alert(data.error);
             else {
+              console.log(data.token)
               localStorage.setItem("token", data.token);
               setStore({ token: data.token, loggedIn: true });
               getActions().verifyIdentity();
@@ -374,29 +381,33 @@ const getState = ({ getStore, getActions, setStore }) => {
 
       logout: () => {
         setStore({ loggedIn: false });
-        setStore({ token: null })
-				localStorage.removeItem('token')
+        setStore({ token: null });
+        localStorage.removeItem("token");
         console.log("Logged out successfully!");
       },
 
       verifyIdentity: () => {
-				let token = localStorage.getItem('token')
-				if (token) {
-					fetch(process.env.BACKEND_URL + '/api/verify_identity', {
-						method: 'GET',
-						headers: {
-							'Content-Type': 'application/json',
-							'Authorization': 'Bearer ' + token
-						}
-					})
-						.then(response => response.json())
-						.then(data => {
-							if (data && data.user) {
-								setStore({ user: data.user, token: token })
-							}
-						})
-				}
-			},
+        let token = localStorage.getItem("token");
+        if (token) {
+          fetch(process.env.BACKEND_URL + "/api/verify_identity", {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer " + token,
+            },
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              if (data && data.user) {
+                setStore({
+                  
+                  user: data.user,
+                  token: token
+                });
+              }
+            });
+        }
+      },
       //------------------------USER DETAILS ACTIONS--------------------//
       updateItem: (newItem, itemType) => {
         setStore((prevStore) => ({
@@ -440,15 +451,42 @@ const getState = ({ getStore, getActions, setStore }) => {
         const store = getStore();
         fetch(process.env.BACKEND_URL + "/api/deal", {
           method: "POST",
-          body: JSON.stringify({ deal }),
+          body: JSON.stringify({ 
+            
+            "game_title": "",
+            "format": "",
+            "platform" : "",
+            "original_price" : "",
+            "offer_price": "",
+            "type": "",
+            "offer_link": "",
+            "expiration_date": null,
+            "promo_code": "",
+            "scheduled": false,
+            "scheduled_date": null,
+            "scheduled_time": null,
+            "image_url": "",
+            "rating": "",
+            "game_tags": "",
+            ...deal
+          }),
           headers: {
             "Content-Type": "application/json",
+            Authorization: "Bearer " + store.token
           },
         })
-          .then((response) => response.json())
+        .then((response) => {
+          if (!response.ok) {
+            throw Error(`Status: ${response.status}`);
+          }
+          return response.json();
+        })
           .then(() => {
             setStore((prevStore) => ({
-              user: { ...prevStore.user, posts: [...prevStore.user.posts, deal] },
+              user: {
+                ...prevStore.user,
+                posts: [...prevStore.user.posts, deal],
+              },
             }));
             console.log(deal);
             console.log("Deal posted successfully!");
@@ -456,6 +494,7 @@ const getState = ({ getStore, getActions, setStore }) => {
           })
           .catch((error) => {
             alert(error);
+            console.log(deal);
             console.log("Error posting:", error);
           });
       },

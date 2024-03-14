@@ -3,7 +3,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 
 import { Context } from "../store/appContext";
 
-import "/workspaces/loggon-dak-final-project-v2/src/front/styles/button.css"
+import "/workspaces/loggon-dak-final-project-v2/src/front/styles/button.css";
 
 export const Navbar = () => {
   const { store, actions } = useContext(Context);
@@ -64,8 +64,8 @@ export const Navbar = () => {
       actions.signup(
         signup.email,
         signup.password,
-        signup.newsletter,
-        signup.privacy
+
+        signup.username
       );
       alert("Successfully registered!");
       navigate("/login");
@@ -145,20 +145,21 @@ export const Navbar = () => {
               <div className="offcanvas-body">
                 <div className="d-flex flex-column ms-4 my-3">
                   {store.loggedIn && (
-                    <Link
-                      className="text-white text-decoration-none mb-2"
-                      to={`/myprofile/${store.user.username}`}
-                    >
-                      <div data-bs-dismiss="offcanvas">My profile</div>
-                    </Link>
+                    <div>
+                      <Link
+                        className="text-white text-decoration-none mb-2"
+                        to={`/myprofile/${store.user.username}`}
+                      >
+                        <div data-bs-dismiss="offcanvas">My profile</div>
+                      </Link>
+                      <Link
+                        className="text-white text-decoration-none mb-2"
+                        to={`/postdeal/user/${store.user.username}`}
+                      >
+                        <div data-bs-dismiss="offcanvas">Post deal</div>
+                      </Link>{" "}
+                    </div>
                   )}
-
-                  <Link
-                    className="text-white text-decoration-none mb-2"
-                    to={`/postdeal/user/${store.user.username}`}
-                  >
-                    <div data-bs-dismiss="offcanvas">Post deal</div>
-                  </Link>
                   <Link
                     className="text-white text-decoration-none mb-2"
                     to={"/games"}
@@ -322,8 +323,7 @@ export const Navbar = () => {
                       {/*---------------------------------------Login Modal buttons---------------------------------*/}
                       <div className="modal-footer border-0 flex-column">
                         <button
-                          className="btn text-white btn-effect" 
-                          
+                          className="btn text-white btn-effect"
                           data-bs-toggle={`${store.loggedIn ? "modal" : ""}`}
                           onClick={handleLogin}
                         >
@@ -578,7 +578,6 @@ export const Navbar = () => {
                       <label
                         htmlFor="signupUsernameInput"
                         className="form-label"
-                        
                       >
                         Username
                       </label>

@@ -20,11 +20,13 @@ export const PostDeal = (props) => {
     format: "Digital",
     original_price: "",
     offer_price: "",
-    expiration_date: "",
+    expiration_date: null,
     promo_code: "",
     offer_link: "",
-    scheduled_date: "",
-    scheduled_time: "",
+    scheduled_date: null,
+    scheduled_time: null,
+    scheduled: false, 
+    rating: 0
   });
   const [additionalDeals, setAdditionalDeals] = useState([]);
 
@@ -57,7 +59,7 @@ export const PostDeal = (props) => {
       return;
     } else {
       actions.postDeal(deal);
-      navigate(`/myprofile/${username}`);
+      //navigate(`/myprofile/${username}`);
     }
   }
 

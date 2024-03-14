@@ -28,6 +28,7 @@ export const MyProfile = (props) => {
   const [clicked, setClicked] = useState("");
 
   useEffect(() => {
+    console.log(store.user)
     setUser(store.user);
     setNewUsername(store.user.username);
     setNewUserImage(store.user.image_url);
@@ -293,7 +294,7 @@ export const MyProfile = (props) => {
               <li className="list-group-item border-0 my-2 text-white bg-transparent d-flex flex-row">
                 {/*!!!!!BUG!!!!!!!--------Creo que el problema cuando se añade más intereses y la página empieza a bailar está aquí */}
                 <div className="d-flex flex-wrap gap-2">
-                  {user.interests.length == 0 ? (
+                  {(!user || !user.interests || user.interests.length === 0) ? (
                     <p className="bg-transparent p-2">No Interests Added</p>
                   ) : (
                     user.interests.map((interest, index) => (
@@ -363,7 +364,7 @@ export const MyProfile = (props) => {
                         <small>My interests</small>
                         <ul className="list-group border-0 my-2 bg-transparent d-flex flex-row">
                           <div className="d-flex flex-wrap gap-2 justify-content-center">
-                            {user.interests.length === 0 ? (
+                            {(!user || !user.interests || user.interests.length === 0) ? (
                               <p className="bg-transparent p-2">
                                 No Interests Added
                               </p>

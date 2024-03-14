@@ -166,8 +166,7 @@ def get_steam_oauth_token():
 ('''
 
 
-Que nos Falta? dinero JAJAJAJ 
-
+Que nos Falta? dinero JAJAJAJ
 
 
 
@@ -195,7 +194,7 @@ def Login():
     access_token = create_access_token(identity=user.id)
     return jsonify({ "token": access_token })
 
-#----ADDED THIS--------------------------------------------------Verify Identity-------------------------------------------------------------------
+#----ADDED THIS-------------------------------------------------------Verify Identity---------------------------------------------------------------------------------
 
 @api.route('/verify_identity', methods=['GET'])
 @jwt_required()
@@ -267,8 +266,10 @@ def get_user(user_id):
             "username": user.username,
             "steam_username": user.steam_username,
             "twitch_username": user.twitch_username,
-            "image_url": user.image_url
-           
+            "image_url": user.image_url,
+            "saved": [saved.serialize() for saved in user.saved],
+            "posts": [posts.serialize() for posts in user.posts],
+            "alerts": [alerts.serialize() for alerts in user.alerts]           
         }
 
         return jsonify(user_data), 200

@@ -18,11 +18,10 @@ class User(db.Model): #( todo)
     twitch_username = db.Column(db.String(40))
     #interests = db.Column(db.String(20)) 
     saved = db.relationship('Saved', backref='user', lazy=True)
-    posts = db.Column(db.String) 
-    alerts = db.Column(db.String)
+    posts = db.relationship('Posts', backref='user', lazy=True) 
+    alerts = db.relationship('Alerts', backref='user', lazy=True) 
     newsletter = db.Column(db.Boolean())
-    
-    interests = db.relationship('Interest', backref='user', lazy=True)
+    interests = db.relationship('Interests', backref='user', lazy=True)
 
     # interests = db.Column(db.ARRAY(db.String(20)))
     
@@ -39,9 +38,9 @@ class User(db.Model): #( todo)
             "username": self.username,
             "steam_username": self.steam_username,
             "twitch_username": self.twitch_username,
-            #"interests": [interest.serialize() for interest in self.interest], # preguntar a pere
+            "interests": [interest.serialize() for interest in self.interests], # preguntar a pere
             "saved" : [saved.serialize() for saved in self.saved],
-            "posts": self.posts,
+            "posts": [posts.serialize() for posts in self.posts],
             "alerts": self.alerts,
             "newsletter": self.newsletter,
     
