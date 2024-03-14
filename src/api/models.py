@@ -18,8 +18,8 @@ class User(db.Model): #( todo)
     twitch_username = db.Column(db.String(40))
     #interests = db.Column(db.String(20)) 
     saved = db.relationship('Saved', backref='user', lazy=True)
-    posts = db.Column(db.String) 
-    alerts = db.Column(db.String)
+    posts = db.relationship('Posts', backref='user', lazy=True)
+    alerts = db.relationship('Alerts', backref='user', lazy=True)
     newsletter = db.Column(db.Boolean())
     
     interests = db.relationship('Interest', backref='user', lazy=True)
@@ -41,8 +41,8 @@ class User(db.Model): #( todo)
             "twitch_username": self.twitch_username,
             #"interests": [interest.serialize() for interest in self.interest], # preguntar a pere
             "saved" : [saved.serialize() for saved in self.saved],
-            "posts": self.posts,
-            "alerts": self.alerts,
+            "posts": [posts.serialize() for posts in self.saved],
+            "alerts": [alerts.serialize() for alerts in self.saved],
             "newsletter": self.newsletter,
     
         }
@@ -152,3 +152,40 @@ class Vote(db.Model):
             "user_id": self.user_id,
             "deal_id": self.deal_id 
         }
+    
+#----------------------------------------------------------Posts-------------------------------------------------------------------------
+    
+class Posts(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    deal_id = db.Column(db.Integer, db.ForeignKey("deal.id"), nullable=False)
+    
+
+    def __repr__(self):
+        return '<Saved %r>' % self.id
+
+    def serialize(self): 
+        return {
+            "id": self.id,
+            "user_id": self.user_id,
+            "deal_id": self.deal_id
+        }
+
+#---------------------------------------------------------Alerts--------------------------------------------------------------------------
+    
+class Alerts(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    deal_id = db.Column(db.Integer, db.ForeignKey("deal.id"), nullable=False)
+    
+
+    def __repr__(self):
+        return '<Saved %r>' % self.id
+
+    def serialize(self): 
+        return {
+            "id": self.id,
+            "user_id": self.user_id,
+            "deal_id": self.deal_id
+        }
+    

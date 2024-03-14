@@ -98,14 +98,13 @@ def send_email():
          return jsonify({"error": "Este usuario se esfumo" }), 401
      
      token = create_access_token(identity=user.id)
+     link = 'https://curly-palm-tree-5gqrjj97pq4rc7gg7-3000.app.github.dev/password_recovery?token=' + token
     
-
-
      message = Message(
          subject="Reset you password",
          sender=app.config.get("MAIL_USERNAME"),
          recipients=[email],
-         html='<a href="https://curly-palm-tree-5gqrjj97pq4rc7gg7-3000.app.github.dev/password_recovery/' + token +'">Forgot my passworito</a>'
+         html='<a href="' + link +'">Forgot my passworito</a>'
      )
 
 

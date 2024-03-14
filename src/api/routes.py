@@ -29,6 +29,7 @@ def handle_hello():
 
 #---------------------------------------------------------Signup-------------------------------------------------------------
 
+
 @api.route("/signup", methods=["POST"])
 def signup():
     # Get the request data
@@ -56,7 +57,44 @@ def signup():
   
 
     return jsonify({ "message": "success" }), 200
-
+ 
+('''
+@api.route("/singup", methods=["POST"])
+def create_user():
+    data = request.get_json()    
+    
+    # Get the values from the request data, or use default values
+    
+    email = data.get("email", "")
+    password = data.get("password", "")
+    username = data.get("username", "")
+    image_url = data.get("image_url", "default_image_url")
+    steam_username = data.get("steam_username", "")
+    twitch_username = data.get("twitch_username", "")
+    posts = data.get("posts", "[]")
+    alerts = data.get("alerts", "[]")
+    newsletter = data.get("newsletter", False)    
+    
+    # Create the new user
+    
+    user = User(
+        email=email,
+        password=password,
+        username=username,
+        image_url=image_url,
+        steam_username=steam_username,
+        twitch_username=twitch_username,
+        posts=posts,
+        alerts=alerts,
+        newsletter=newsletter
+    )   
+    
+    # Add the new user to the database
+    db.session.add(user)
+    db.session.commit()    
+    
+    return jsonify({ "message": "User created successfully" }), 201
+''')
 #----------------------------------------------------------Login Google-------------------------------------------------------------------------
 
 
@@ -456,29 +494,22 @@ def get_all_deals():
     
 #---------------------------------------------------------Recuperar Contraseña(chequear)-----------------------------------------------------
     
-('''@api.route('/reset-password', methods=['POST'])
+@api.route('/', methods=['PUT'])
 @jwt_required()
-def reset_password_request():
-    id = get_jwt_identity()
-    try:
-        # Obtener el correo electrónico del cuerpo de la solicitud
-        data = request.get_json()
-        email = data.get('email')
+def reset_password():
+    password = request.json.get("password, None")
 
-        # Verificar si el correo electrónico está asociado a un usuario
-        user = User.query.filter_by(email=email).first()
+    current_user_id = get_jwt_identity()
+    user = User.query.filter_by(id=current_user_id).first()
 
-        if not user:
-            return jsonify({"error": "User not found"}), 404
+    if user is None:
+        return jsonify({ "error": "Este usuario no existe" }), 401
+    
+    user.password = password
+    db.session.add
+    
+    return jsonify({ "user": user.serialize() })
 
-        # Generar un token de restablecimiento de contraseña y enviar un correo electrónico al usuario
-        send_password_reset_email(user)
-
-        return jsonify({"message": "Password reset email sent successfully"}), 200
-
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-    ''')
 #-------------------------------------------------------- Rating (chequear)--------------------------------------------------------------------
     
 @api.route('/deal/up_rating/<int:item_id>', methods=['PATCH'])
