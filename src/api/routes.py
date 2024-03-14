@@ -162,7 +162,8 @@ def get_steam_oauth_token():
 ('''
 
 
-Que nos Falta? dinero JAJAJAJ
+Que nos Falta? dinero JAJAJAJ 
+
 
 
 
@@ -190,7 +191,7 @@ def Login():
     access_token = create_access_token(identity=user.id)
     return jsonify({ "token": access_token })
 
-#----ADDED THIS-------------------------------------------------------Verify Identity---------------------------------------------------------------------------------
+#----ADDED THIS--------------------------------------------------Verify Identity-------------------------------------------------------------------
 
 @api.route('/verify_identity', methods=['GET'])
 @jwt_required()
