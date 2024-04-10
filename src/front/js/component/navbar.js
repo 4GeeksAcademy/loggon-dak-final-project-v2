@@ -5,7 +5,7 @@ import { Context } from "../store/appContext";
 
 import '../../styles/button.css';
 
-import logoImg from '/workspaces/loggon-dak-final-project-v2/src/front/img/loggon1.png';
+import logoImg from '../../img/loggon1.png';
 
 export const Navbar = () => {
   const { store, actions } = useContext(Context);
@@ -153,7 +153,7 @@ export const Navbar = () => {
                         className="text-white text-decoration-none mb-2"
                         to={`/myprofile/${store.user.username}`}
                       >
-                        <div className="mb-2"  data-bs-dismiss="offcanvas">My profile</div>
+                        <div className="mb-2" data-bs-dismiss="offcanvas">My profile</div>
                       </Link>
                       <Link
                         className="text-white text-decoration-none mb-2"
@@ -652,7 +652,7 @@ export const Navbar = () => {
                     <div
                       id="passwordHelpBlock"
                       className="form-text text-white p-2"
-                      style={{fontSize: "10px"}}
+                      style={{ fontSize: "10px" }}
                     >
                       Your password must be 8-20 characters long, contain
                       letters and numbers, and must not contain spaces, special

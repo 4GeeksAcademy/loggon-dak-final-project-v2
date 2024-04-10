@@ -8,7 +8,7 @@ db = SQLAlchemy()
 #----------------------------------------  asegurar de no modifcar models               ---------------------------------------------
 #------------------------------------------------------------------------------------------------------------------------------------
 
-class User(db.Model): #( todo)
+class User(db.Model): #(todo)
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(200), unique=True, nullable=False)
     password = db.Column(db.String(128), nullable=False)
@@ -16,16 +16,12 @@ class User(db.Model): #( todo)
     username = db.Column(db.String(30), nullable=False)
     steam_username = db.Column(db.String(40))
     twitch_username = db.Column(db.String(40))
-    #interests = db.Column(db.String(20)) 
+    interests = db.relationship('Interests', backref='user', lazy=True) 
     saved = db.relationship('Saved', backref='user', lazy=True)
-    posts = db.Column(db.String) 
-    alerts = db.Column(db.String)
+    posts = db.relationship('Post', backref='user', lazy=True)
+    alerts = db.relationship('Alerts', backref='user', lazy=True)
     newsletter = db.Column(db.Boolean())
-    
-    interests = db.relationship('Interest', backref='user', lazy=True)
-
-    # interests = db.Column(db.ARRAY(db.String(20)))
-    
+     
 
     def __repr__(self):
         return '<User %r>' % self.id
@@ -39,10 +35,10 @@ class User(db.Model): #( todo)
             "username": self.username,
             "steam_username": self.steam_username,
             "twitch_username": self.twitch_username,
-            #"interests": [interest.serialize() for interest in self.interest], # preguntar a pere
+            "interests": [interest.serialize() for interest in self.interest],
             "saved" : [saved.serialize() for saved in self.saved],
-            "posts": self.posts,
-            "alerts": self.alerts,
+            "posts": [posts.serialize() for posts in self.saved],
+            "alerts": [alerts.serialize() for alerts in self.saved],
             "newsletter": self.newsletter,
     
         }
